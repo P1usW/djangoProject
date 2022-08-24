@@ -1,0 +1,14 @@
+<!-- Первый вариант встраивания категории при помощи тэгов -->
+
+{% load news_tags %}
+{% get_categories as categories %}
+<div class="list-group">
+    <h6>Категории:</h6>
+    {% for item in categories %}
+        {% if item == one_category %}
+            <a href="{% url 'home' %}" class="list-group-item list-group-item-action active">{{ item.title }}</a>
+        {% else %}
+            <a href="{% url 'category' item.pk%}" class="list-group-item list-group-item-action">{{ item.title }}</a>
+        {% endif %}
+    {% endfor %}
+</div>

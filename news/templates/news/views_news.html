@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ news_item.title }}
+{% endblock %}
+
+{% block sidebar %}
+    {% load news_tags %}
+    {% show_categories %}
+{% endblock %}
+
+{% block content %}
+    {% if news_item.is_published %}
+        <div class="card mb-4">
+            <div class="card-header">
+                Категория: <a href="{{ new.category.get_absolute_url }}">{{ news_item.category }}</a>
+            </div>
+            <div class="card-body">
+                {% if news_item.photo %}
+                    <img src="{{ news_item.photo.url }}" class="rounded float-start me-3" alt="..." height="300" width="350">
+                {% endif %}
+                <h5 class="card-title">{{ news_item.title }}</h5>
+                <p class="card-text">{{ news_item.body|linebreaks }}</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">Назад</a>
+            </div>
+            <div class="card-footer text-muted">
+                <p>Опубликовано: {{ new.create_at.date }}</p>
+                <p>(изменено {{ new.update_at|timesince }} назад)</p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+

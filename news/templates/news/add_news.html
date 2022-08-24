@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Новая новость
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <h1>Новая новость</h1>
+    <form action="{% url 'add_news' %}" method="post">
+        {% csrf_token %}
+
+        {# {{ form.as_p }} полностью автоматический вариант, ничем не отличается от варианта ниже #}
+
+        <div class="mb-3">
+            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}:</label>
+            {{ form.title }}
+            {{ form.title.errors }}
+            <span class="helptext">{{ form.title.help_text }}</span>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.body.id_for_label }}">{{ form.body.label }}:</label>
+            {{ form.body }}
+            {{ form.body.errors }}
+        </div>
+            <div class="mb-3">
+            <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}:</label>
+            {{ form.photo }}
+            {{ form.photo.errors }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.is_published.id_for_label }}">{{ form.is_published.label }}</label>
+            {{ form.is_published }}
+            {{ form.is_published.errors }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.category.id_for_label }}">{{ form.category.label }}:</label>
+            {{ form.category }}
+            {{ form.category.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Добавить новость</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary btn-lg">Отменить</a>
+    </form>
+{% endblock %}
+
+
+

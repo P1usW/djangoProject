@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Вход :: {{ title }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="container text-center mt-5">
+        <h1>Авторизация</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+                <span class="text-danger">{{ form.username.errors }}</span>
+                <span class="helptext">{{ form.username.help_text }}</span>
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}:</label>
+                {{ form.password }}
+                <span class="text-danger">{{ form.password.errors }}</span>
+                <span class="helptext">{{ form.passwor.help_text }}</span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Войти</button>
+        </form>
+    </div>
+    <a href="{% url 'recover_password_request' %}">Забыли пароль?</a>
+{% endblock %}

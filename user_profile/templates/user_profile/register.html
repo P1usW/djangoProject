@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Регистрация :: {{ title }}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="container text-center mt-5">
+        <h1>Регистрация</h1>
+        <form method="post">
+            {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            {{ form.username }}
+            <span class="text-danger">{{ form.username.errors }}</span>
+            <span class="helptext">{{ form.username.help_text }}</span>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}:</label>
+            {{ form.first_name }}
+            <span class="text-danger">{{ form.first_name.errors }}</span>
+        </div>
+            <div class="mb-3">
+            <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}:</label>
+            {{ form.last_name }}
+            <span class="text-danger">{{ form.last_name.errors }}</span>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}
+            <span class="text-danger">{{ form.email.errors }}</span>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}:</label>
+            {{ form.password1 }}
+            <span class="text-danger">{{ form.password1.errors }}</span>
+            <span class="helptext">{{ form.password1.help_text }}</span>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}:</label>
+            {{ form.password2 }}
+            <span class="text-danger">{{ form.password2.errors }}</span>
+            <span class="helptext">{{ form.password2.help_text }}</span>
+        </div>
+             <button type="submit" class="btn btn-primary btn-lg">Зарегестрироваться</button>
+        </form>
+    </div>
+{% endblock %}
