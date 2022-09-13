@@ -1,30 +1,28 @@
-from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.views import PasswordResetConfirmView, LogoutView, PasswordResetView, LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
-from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
+from django.views.generic.edit import CreateView
 from .forms import RecoverPasswordForm, RecoverSetPasswordForm, UserRegisterForm, UserAuthForms
 from .utils import ErrorMessageMixin
 
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Вы успешно зарегестрировались!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Произошла ошибка, повторите снова!')
-    else:
-        form = UserRegisterForm()
-    return render(request, template_name='user_profile/register.html', context={'form': form})
+class Register(SuccessMessageMixin, ErrorMessageMixin, CreateView):
+    template_name = 'user_profile/register.html'
+    form_class = UserRegisterForm
+    success_url = reverse_lazy('home')
+    success_message = 'Вы успешно зарегестрировались!'
+    error_message = 'Произошла ошибка, повторите снова!'
+    http_method_names = ['get', 'post']
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
 
 
 class Profile(DetailView):
@@ -32,7 +30,7 @@ class Profile(DetailView):
     context_object_name = 'user_profile'
 
     def get_queryset(self):
-        return User.objects.filter(pk=self.kwargs['pk']).annotate(Count('news'))[0]
+        return User.objects.filter(pk=self.kwargs['pk']).annotate(Count('news'))
 
 
 class RecoverPasswordRequest(SuccessMessageMixin, ErrorMessageMixin, PasswordResetView):

@@ -37,14 +37,19 @@
                 </li>
             </ul>
             {% if not user.is_authenticated %}
-                <span class="nav-item ms-3">
+                <span class="nav-item mx-2">
                     <a class="nav-link" href="{% url 'login' %}">Войти</a>
                 </span>
-                <span class="nav-item ms-3">
+                <span class="nav-item mx-1">|</span>
+                <span class="nav-item mx-2">
                     <a class="nav-link" href="{% url 'register' %}">Зарегестрироваться</a>
                 </span>
             {% else %}
-                <span class="nav-item ms-3">
+                <span class="nav-item mx-2">
+                    Добро пожаловать, {{ user.get_username }}
+                </span>
+                <span class="nav-item mx-1">|</span>
+                <span class="nav-item mx-2">
                     <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
                 </span>
             {% endif %}

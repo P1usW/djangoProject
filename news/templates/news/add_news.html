@@ -11,8 +11,6 @@
     <form action="{% url 'add_news' %}" method="post">
         {% csrf_token %}
 
-        {# {{ form.as_p }} полностью автоматический вариант, ничем не отличается от варианта ниже #}
-
         <div class="mb-3">
             <label for="{{ form.title.id_for_label }}">{{ form.title.label }}:</label>
             {{ form.title }}
@@ -39,11 +37,6 @@
             {{ form.category }}
             {{ form.category.errors }}
         </div>
-{#        <div class="mb-3">#}
-{#            <label for="{{ form.author.if_for_label }}">{{ form.author.label }}:</label>#}
-{#            {{ form.author }}#}
-{#            {{ form.author.errors }}#}
-{#        </div>#}
         <button type="submit" class="btn btn-primary btn-lg">Добавить новость</button>
         <a href="{% url 'home' %}" class="btn btn-secondary btn-lg">Отменить</a>
     </form>

@@ -43,7 +43,7 @@ class UserAuthForms(AuthenticationForm):
 
 
 class RecoverPasswordForm(PasswordResetForm):
-    email = forms.CharField(label='Почта', max_length=254, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.CharField(label='Почта', max_length=254, widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
 
 class RecoverSetPasswordForm(SetPasswordForm):
