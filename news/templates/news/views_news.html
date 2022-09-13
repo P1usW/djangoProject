@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="col">
     {% if news_item.is_published %}
         <div class="card mb-4">
             <div class="card-header">
@@ -24,11 +25,13 @@
                 <a href="{% url 'home' %}" class="btn btn-primary">Назад</a>
             </div>
             <div class="card-footer text-muted">
-                <p>Опубликовано: {{ new.create_at.date }}</p>
-                <p>(изменено {{ new.update_at|timesince }} назад)</p>
+                <p>Опубликовано: {{ news_item.create_at.date }}</p>
+                <p>(изменено {{ news_item.update_at|timesince }} назад)</p>
+                <p>Автор статьи <a href="{% url 'profile' pk=news_item.author.pk %}">{{ news_item.author.username }}</a></p>
             </div>
         </div>
     {% endif %}
+</div>
 {% endblock %}
 
 

@@ -1,9 +1,14 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
-from .models import News, Category
-from .forms import NewsForm
+from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import FormView
+from django.template.loader import render_to_string
+from .models import News, Category
+from .forms import NewsForm, SendMailForm
+from .utils import ErrorMessageMixin
 
 
 class HomeNews(ListView):
@@ -13,8 +18,6 @@ class HomeNews(ListView):
     context_object_name = 'news'
     paginate_by = 10
     paginate_orphans = 4
-    # ordering = ['-create_at']
-    # extra_context = {'title': 'Список новостей'}
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,49 +53,47 @@ class ViewNews(DetailView):
     context_object_name = 'news_item'
     http_method_names = ['get']
 
+    def get_queryset(self):
+        return News.objects.filter(pk=self.kwargs['pk']).select_related('author').select_related('category')
 
-class AddNews(LoginRequiredMixin, CreateView):
+
+class AddNews(LoginRequiredMixin, SuccessMessageMixin, ErrorMessageMixin, CreateView):
     form_class = NewsForm
     template_name = 'news/add_news.html'
     http_method_names = ['get', 'post']
     login_url = reverse_lazy('home')
+    success_message = 'Новость успешно опубликована!'
+    error_message = 'Произошла ошибка, повторите снова!'
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+        return super(AddNews, self).form_valid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({'author': self.request.user})
+        return initial
 
 
-# def index(request):
-#     news = News.objects.order_by('-create_at')
-#     context = {
-#         'news': news,
-#         'title': 'Список новостей',
-#     }
-#     return render(request, 'news/index.html', context=context)
+class SendMail(FormView):
+    form_class = SendMailForm
+    template_name = 'news/send_mail_support.html'
+    http_method_names = ['get', 'post']
+    success_url = reverse_lazy('home')
 
-
-# def get_category(request, category_id):
-#     news = News.objects.filter(category_id=category_id)
-#     category = Category.objects.get(pk=category_id)
-#     context = {
-#         'title': 'Список новостей по категории: {}'.format(category.title),
-#         'news': news,
-#         'one_category': category
-#     }
-#     return render(request, 'news/category.html', context=context)
-
-
-# def view_news(request, news_id):
-#     news_item = get_object_or_404(News, pk=news_id)
-#     context = {
-#         'news_item': news_item
-#     }
-#     return render(request, 'news/views_news.html', context=context)
-
-
-# def add_news(request):
-#     if request.method == 'POST':
-#         form = NewsForm(request.POST)
-#         if form.is_valid():
-#             # news = News.objects.create(**form.cleaned_data)
-#             news = form.save()
-#             return redirect(news)
-#     else:
-#         form = NewsForm()
-#     return render(request, 'news/add_news.html', context={'form': form})
+    def form_valid(self, form):
+        message_body = form.cleaned_data['body']
+        rendered = render_to_string('news/support_message.html',
+                                    context={'body': message_body,
+                                             'username': self.request.user.username
+                                             }
+                                    )
+        send_mail(subject='Сообщение поддержки',
+                  message=''.format(message_body),
+                  from_email=None,
+                  recipient_list=['ivshavrin@gmail.com'],
+                  html_message=rendered
+                  )
+        return super().form_valid(form)

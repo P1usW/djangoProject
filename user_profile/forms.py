@@ -51,4 +51,3 @@ class RecoverSetPasswordForm(SetPasswordForm):
                                     widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     new_password2 = forms.CharField(label='Повторите пароль',
                                     widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-

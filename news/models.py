@@ -13,6 +13,7 @@ class News(models.Model):
     photo = models.ImageField(upload_to='photo_news/%Y/%m/%d/', blank=True)
     is_published = models.BooleanField(default=True)
     category = models.ForeignKey('Category', on_delete=models.PROTECT)
+    author = models.ForeignKey(User, verbose_name='автор', on_delete=models.CASCADE, blank=True, default=1)
 
     def get_absolute_url(self):
         """Выбрав такое имя метода, мы так же добавляем ссылку в адимнке"""

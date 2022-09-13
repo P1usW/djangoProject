@@ -39,6 +39,11 @@
             {{ form.category }}
             {{ form.category.errors }}
         </div>
+{#        <div class="mb-3">#}
+{#            <label for="{{ form.author.if_for_label }}">{{ form.author.label }}:</label>#}
+{#            {{ form.author }}#}
+{#            {{ form.author.errors }}#}
+{#        </div>#}
         <button type="submit" class="btn btn-primary btn-lg">Добавить новость</button>
         <a href="{% url 'home' %}" class="btn btn-secondary btn-lg">Отменить</a>
     </form>
