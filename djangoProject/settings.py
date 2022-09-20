@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'captcha',
     'news.apps.NewsConfig',
-    'user_profile.apps.UserProfileConfig'
+    'user_profile.apps.UserProfileConfig',
 ]
 
 MIDDLEWARE = [
@@ -105,6 +106,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'django_cache'),
+        'TIMEOUT': 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -140,9 +153,17 @@ INTERNAL_IPS = [
 ]
 AUTH_USER_MODEL = 'auth.User'
 
+# Email settings
+
 EMAIL_HOST_USER = 'ivanflaskemail@gmail.com'
 EMAIL_HOST_PASSWORD = 'zbmoevtpnlcwhhwm'
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
 EMAIL_PORT = 465
 EMAIL_HOST = 'smtp.gmail.com'
+
+# Captcha settings
+
+CAPTCHA_FONT_SIZE = 50
+CAPTCHA_LENGTH = 6
+#CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'

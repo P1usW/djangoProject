@@ -54,7 +54,7 @@ class ViewNews(DetailView):
     http_method_names = ['get']
 
     def get_queryset(self):
-        return News.objects.filter(pk=self.kwargs['pk']).select_related('author').select_related('category')
+        return News.objects.filter(is_published=True, pk=self.kwargs['pk']).select_related('author', 'category')
 
 
 class AddNews(LoginRequiredMixin, SuccessMessageMixin, ErrorMessageMixin, CreateView):
@@ -87,7 +87,8 @@ class SendMail(FormView):
         message_body = form.cleaned_data['body']
         rendered = render_to_string('news/support_message.html',
                                     context={'body': message_body,
-                                             'username': self.request.user.username
+                                             'username': self.request.user.username,
+                                             'email': self.request.user.email
                                              }
                                     )
         send_mail(subject='Сообщение поддержки',
@@ -97,3 +98,16 @@ class SendMail(FormView):
                   html_message=rendered
                   )
         return super().form_valid(form)
+
+
+class Search(ListView):
+    template_name = 'news/search.html'
+    http_method_names = ['get']
+    context_object_name = 'news'
+    paginate_by = 10
+    paginate_orphans = 4
+
+    def get_queryset(self):
+        return News.objects.filter(
+            is_published=True,
+            title__icontains=self.request.GET.get('search_field')).order_by('-create_at').select_related('category')

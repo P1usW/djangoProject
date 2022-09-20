@@ -3,17 +3,17 @@ from django.contrib import messages
 
 class ErrorMessageMixin:
     """
-    Add a error message on successful form submission.
+    Add an error message when the form was submitted unsuccessfully.
     """
 
     error_message = ""
 
     def form_invalid(self, form):
         response = super().form_invalid(form)
-        error_message = self.get_errror_message()
+        error_message = self.get_error_message()
         if error_message:
             messages.error(self.request, error_message)
         return response
 
-    def get_error_message(self, cleaned_data=None):
-        return self.error_message % cleaned_data
+    def get_error_message(self):
+        return self.error_message

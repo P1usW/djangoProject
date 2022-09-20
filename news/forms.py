@@ -2,20 +2,7 @@ from django import forms
 from .models import News
 import re
 from django.core.exceptions import ValidationError
-
-
-# class NewsFormTest(forms.Form):
-#     title = forms.CharField(min_length=1, max_length=64, label='Заголовок', help_text='Максимальная длина 64 символа',
-#                             widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     body = forms.CharField(max_length=1024, label='Текст статьи', required=False,
-#                            widget=forms.Textarea(attrs={'class': 'form-control'}))
-#     photo = forms.ImageField(label='Фото', required=False,
-#                              widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
-#     is_published = forms.BooleanField(label='Опубликовать?', initial=True,
-#                                       widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-#     category = forms.ModelChoiceField(queryset=Category.objects.all(), label='Категория',
-#                                       empty_label='Выбрать категорию',
-#                                       widget=forms.Select(attrs={'class': 'form-select'}))
+from captcha.fields import CaptchaField
 
 
 class NewsForm(forms.ModelForm):
@@ -64,3 +51,4 @@ class SendMailForm(forms.Form):
                            label='Сообщение',
                            help_text='Максимальная длина 1024 символа',
                            widget=forms.Textarea(attrs={'class': 'form-control'}))
+    captcha = CaptchaField(label='Каптча')

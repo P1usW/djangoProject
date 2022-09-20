@@ -14,7 +14,15 @@ class NewsAdmin(admin.ModelAdmin):
     readonly_fields = ('create_at', 'update_at', 'get_photo')
     fieldsets = (
         (None, {
-            'fields': ('title', 'body', 'category', 'author', 'is_published', 'create_at', 'update_at',  'photo', 'get_photo',),
+            'fields': ('title',
+                       'body',
+                       'category',
+                       'author',
+                       'is_published',
+                       'create_at',
+                       'update_at',
+                       'photo',
+                       'get_photo',),
         }),
     )
 

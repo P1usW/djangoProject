@@ -14,7 +14,7 @@
     {% if news_item.is_published %}
         <div class="card mb-4">
             <div class="card-header">
-                Категория: <a href="{{ new.category.get_absolute_url }}">{{ news_item.category }}</a>
+                Категория: <a href="{{ news_item.category.get_absolute_url }}">{{ news_item.category }}</a>
             </div>
             <div class="card-body">
                 {% if news_item.photo %}

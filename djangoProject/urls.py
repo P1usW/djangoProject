@@ -20,9 +20,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('captcha/', include('captcha.urls')),
     path('', include('news.urls')),
     path('profile/', include('user_profile.urls')),
 ]
+
 
 #Только для отладки
 if settings.DEBUG:
