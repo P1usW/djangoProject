@@ -3,3 +3,6 @@ Django==4.0.6
 Pillow==9.2.0
 sqlparse==0.4.2
 tzdata==2022.1
+
+django-simple-captcha~=0.5.17
+django-debug-toolbar~=3.6.0

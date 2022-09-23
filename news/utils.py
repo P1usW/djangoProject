@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.views.generic.detail import SingleObjectMixin
 
 
 class ErrorMessageMixin:
@@ -17,3 +18,21 @@ class ErrorMessageMixin:
 
     def get_error_message(self):
         return self.error_message
+
+
+class WithVisitCounterMixin(SingleObjectMixin):
+    """
+    Add a list of views.
+    """
+
+    def get_object(self, *args, **kwargs):
+        obj = super().get_object(*args, **kwargs)
+        if self.request.user.is_anonymous:
+            return obj
+        obj.visitors.add(self.request.user)
+        return obj
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['visits'] = self.object.visitors.count()
+        return context

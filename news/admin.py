@@ -6,12 +6,30 @@ from django.utils.safestring import mark_safe
 @admin.register(models.News)
 class NewsAdmin(admin.ModelAdmin):
     date_hierarchy = 'create_at'
-    list_display = ('title', 'category', 'create_at', 'update_at', 'is_published', 'get_photo', 'author')
-    list_display_links = ('title',)
-    search_fields = ('title', 'body', 'author')
-    list_editable = ('is_published',)
-    list_filter = ('category', 'is_published')
-    readonly_fields = ('create_at', 'update_at', 'get_photo')
+    list_display = ('title',
+                    'category',
+                    'create_at',
+                    'update_at',
+                    'author',
+                    'get_visitors',
+                    'get_photo',
+                    'is_published',
+                    )
+    list_display_links = ('title',
+                          )
+    search_fields = ('title',
+                     'body',
+                     'author',
+                     )
+    list_editable = ('is_published',
+                     )
+    list_filter = ('category',
+                   'is_published',
+                   )
+    readonly_fields = ('create_at',
+                       'update_at',
+                       'get_photo',
+                       )
     fieldsets = (
         (None, {
             'fields': ('title',
@@ -22,16 +40,21 @@ class NewsAdmin(admin.ModelAdmin):
                        'create_at',
                        'update_at',
                        'photo',
-                       'get_photo',),
+                       'get_photo',
+                       ),
         }),
     )
 
-    @admin.display(description="Фотография")
+    @admin.display(description='Фотография')
     def get_photo(self, obj):
         if obj.photo:
             return mark_safe(f'<img src="{obj.photo.url}" width="75"')
         else:
             return 'Нет фотографии'
+
+    @admin.display(description='Просмотры')
+    def get_visitors(self, obj):
+        return obj.visitors.count()
 
 
 @admin.register(models.Category)

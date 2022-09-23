@@ -2,10 +2,19 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
-from django.contrib.auth.models import User
 
 
-class News(models.Model):
+class WithVisitCounter(models.Model):
+    visitors = models.ManyToManyField(
+        to=settings.AUTH_USER_MODEL,
+        related_name='%(model_name)s_visits'
+    )
+
+    class Meta:
+        abstract = True
+
+
+class News(WithVisitCounter, models.Model):
     title = models.CharField(max_length=64)
     body = models.TextField(max_length=1024, blank=True)
     create_at = models.DateTimeField(default=timezone.now)
@@ -13,7 +22,8 @@ class News(models.Model):
     photo = models.ImageField(upload_to='photo_news/%Y/%m/%d/', blank=True)
     is_published = models.BooleanField(default=True)
     category = models.ForeignKey('Category', on_delete=models.PROTECT)
-    author = models.ForeignKey(User, verbose_name='автор', on_delete=models.CASCADE, blank=True, default=1)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='автор', on_delete=models.CASCADE,
+                               blank=True, default=1, related_name='news_author')
 
     def get_absolute_url(self):
         """Выбрав такое имя метода, мы так же добавляем ссылку в адимнке"""

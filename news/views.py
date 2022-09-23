@@ -3,12 +3,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+# from django.utils.translation import gettext as _, gettext_lazy as _l
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import FormView
 from django.template.loader import render_to_string
 from .models import News, Category
 from .forms import NewsForm, SendMailForm
-from .utils import ErrorMessageMixin
+from .utils import ErrorMessageMixin, WithVisitCounterMixin
 
 
 class HomeNews(ListView):
@@ -39,7 +40,7 @@ class NewsByCategory(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         one_category = get_object_or_404(Category, pk=self.kwargs['category_id'])
-        context['title'] = 'Список новостей по категории {}'.format(one_category)
+        context['title'] = 'Список новостей по категории %(c)s.' % {'c': one_category}
         return context
 
     def get_queryset(self):
@@ -47,7 +48,7 @@ class NewsByCategory(ListView):
             is_published=True, category_id=self.kwargs['category_id']).order_by('-create_at').select_related('category')
 
 
-class ViewNews(DetailView):
+class ViewNews(WithVisitCounterMixin, DetailView):
     model = News
     template_name = 'news/views_news.html'
     context_object_name = 'news_item'
@@ -77,11 +78,13 @@ class AddNews(LoginRequiredMixin, SuccessMessageMixin, ErrorMessageMixin, Create
         return initial
 
 
-class SendMail(FormView):
+class SendMail(SuccessMessageMixin, ErrorMessageMixin, FormView):
     form_class = SendMailForm
     template_name = 'news/send_mail_support.html'
     http_method_names = ['get', 'post']
     success_url = reverse_lazy('home')
+    success_message = 'Сообщение успешно отправлено'
+    error_message = 'Произошла ошибка, повторите снова!'
 
     def form_valid(self, form):
         message_body = form.cleaned_data['body']

@@ -30,7 +30,7 @@ class Profile(DetailView):
     context_object_name = 'user_profile'
 
     def get_queryset(self):
-        return User.objects.filter(pk=self.kwargs['pk']).annotate(Count('news'))
+        return User.objects.filter(pk=self.kwargs['pk']).annotate(news__count=Count('news_author'))
 
 
 class RecoverPasswordRequest(SuccessMessageMixin, ErrorMessageMixin, PasswordResetView):

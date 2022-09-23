@@ -25,8 +25,9 @@ urlpatterns = [
     path('profile/', include('user_profile.urls')),
 ]
 
+handler404 = 'djangoProject.views.castom_page_not_found'
 
-#Только для отладки
+# Только для отладки
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
