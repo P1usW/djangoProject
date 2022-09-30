@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.detail import SingleObjectMixin
 
 
@@ -18,6 +19,12 @@ class ErrorMessageMixin:
 
     def get_error_message(self):
         return self.error_message
+
+
+class SuccessAndErrorMessageMixin(SuccessMessageMixin, ErrorMessageMixin):
+    """
+    Use success and error message mixin
+    """
 
 
 class WithVisitCounterMixin(SingleObjectMixin):

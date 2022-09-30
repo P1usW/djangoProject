@@ -1,6 +1,5 @@
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 # from django.utils.translation import gettext as _, gettext_lazy as _l
@@ -9,7 +8,7 @@ from django.views.generic.edit import FormView
 from django.template.loader import render_to_string
 from .models import News, Category
 from .forms import NewsForm, SendMailForm
-from .utils import ErrorMessageMixin, WithVisitCounterMixin
+from .utils import SuccessAndErrorMessageMixin, WithVisitCounterMixin
 
 
 class HomeNews(ListView):
@@ -58,7 +57,7 @@ class ViewNews(WithVisitCounterMixin, DetailView):
         return News.objects.filter(is_published=True, pk=self.kwargs['pk']).select_related('author', 'category')
 
 
-class AddNews(LoginRequiredMixin, SuccessMessageMixin, ErrorMessageMixin, CreateView):
+class AddNews(LoginRequiredMixin, SuccessAndErrorMessageMixin, CreateView):
     form_class = NewsForm
     template_name = 'news/add_news.html'
     http_method_names = ['get', 'post']
@@ -78,7 +77,7 @@ class AddNews(LoginRequiredMixin, SuccessMessageMixin, ErrorMessageMixin, Create
         return initial
 
 
-class SendMail(SuccessMessageMixin, ErrorMessageMixin, FormView):
+class SendMail(SuccessAndErrorMessageMixin, FormView):
     form_class = SendMailForm
     template_name = 'news/send_mail_support.html'
     http_method_names = ['get', 'post']

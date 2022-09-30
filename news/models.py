@@ -7,7 +7,8 @@ from django.conf import settings
 class WithVisitCounter(models.Model):
     visitors = models.ManyToManyField(
         to=settings.AUTH_USER_MODEL,
-        related_name='%(model_name)s_visits'
+        related_name='%(model_name)s_visits',
+        blank=True,
     )
 
     class Meta:
@@ -23,7 +24,7 @@ class News(WithVisitCounter, models.Model):
     is_published = models.BooleanField(default=True)
     category = models.ForeignKey('Category', on_delete=models.PROTECT)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='автор', on_delete=models.CASCADE,
-                               blank=True, default=1, related_name='news_author')
+                               blank=True, null=True, related_name='news_author')
 
     def get_absolute_url(self):
         """Выбрав такое имя метода, мы так же добавляем ссылку в адимнке"""

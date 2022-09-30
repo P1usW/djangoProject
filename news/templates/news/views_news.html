@@ -28,7 +28,9 @@
                 <p>Опубликовано: {{ news_item.create_at.date }}</p>
                 <p>(изменено {{ news_item.update_at|timesince }} назад)</p>
                 <p>Просмотры: {{ visits }}</p>
-                <p>Автор статьи <a href="{% url 'profile' pk=news_item.author.pk %}">{{ news_item.author.username }}</a></p>
+                {% if news_item.author %}
+                    <p>Автор статьи <a href="{% url 'profile' pk=news_item.author.pk %}">{{ news_item.author.username }}</a></p>
+                {% endif %}
             </div>
         </div>
     {% endif %}
