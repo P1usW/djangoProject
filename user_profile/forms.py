@@ -40,9 +40,6 @@ class UserAuthForms(AuthenticationForm):
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}),
                                help_text='')
 
-    def __init__(self, *args, **kwargs):
-        super(UserAuthForms, self).__init__(*args, **kwargs)
-
 
 class RecoverPasswordForm(PasswordResetForm):
     email = forms.CharField(label='Почта', max_length=254, widget=forms.EmailInput(attrs={'class': 'form-control'}))
